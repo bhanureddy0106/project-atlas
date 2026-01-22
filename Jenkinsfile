@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven3'
-        jdk 'JDK'
+        maven 'Maven3'  // Match the exact name you used
+        jdk 'JDK'       // Match the exact name you used
     }
 
     stages {
@@ -22,6 +22,7 @@ pipeline {
 
     post {
         always {
+            // Make sure this is inside 'node' context
             junit 'atlas-app/target/surefire-reports/*.xml'
             archiveArtifacts 'atlas-app/target/*.jar'
         }
