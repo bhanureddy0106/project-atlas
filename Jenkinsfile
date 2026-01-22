@@ -1,35 +1,29 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven-3.9.12'
+        jdk 'JDK-17'
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'develop', url: 'C:\Users\Bhanu\projects\project-atlas'
+                git url: 'https://github.com/bhanureddy0106/project-atlas.git', branch: 'main'
             }
         }
 
-        stage('Build') {
+        stage('Build & Test') {
             steps {
-                bat 'mvn clean package'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                bat 'mvn test'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                bat 'echo Deployment would run here'
+                bat 'cd atlas-app && mvn clean test package'
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            junit 'atlas-app/target/surefire-reports/*.xml'
+            archiveArtifacts 'atlas-app/target/*.jar'
         }
     }
 }
